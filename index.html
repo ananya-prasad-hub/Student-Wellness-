@@ -7,78 +7,96 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Pastel Palette */
-            --bg-pastel: #f0f4f8; /* Soft Sky Blue */
-            --card-pastel: #fdfdfd; 
-            --accent-soft: #a5b4fc; /* Pastel Indigo */
-            --mint: #d1fae5;
-            --rose: #ffe4e6;
+            /* Requested Pastel Palette */
+            --bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #f0fdf4 100%); /* Pastel Pink to Mint Green */
+            --pink-soft: #fbcfe8;
+            --green-soft: #dcfce7;
+            --accent-pink: #f472b6;
+            --accent-green: #10b981;
             --text-dark: #334155;
             --text-muted: #64748b;
+            --white: #ffffff;
         }
 
         body {
             font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #f5f3ff 100%);
+            background: var(--bg-gradient);
             color: var(--text-dark);
             margin: 0;
             padding: 40px 20px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            max-width: 700px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            max-width: 800px;
             width: 100%;
             padding: 40px;
             border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
         .header { text-align: center; margin-bottom: 40px; }
-        .brand { font-weight: 700; color: #6366f1; letter-spacing: 1px; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        h1 { margin: 0; font-size: 2rem; color: #1e293b; }
+        .brand { font-weight: 700; color: var(--accent-pink); letter-spacing: 1px; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        h1 { margin: 0; font-size: 2.2rem; color: #1e293b; }
+        p.intro { color: var(--text-muted); margin-top: 10px; }
 
         /* Input Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        @media (max-width: 650px) { .grid { grid-template-columns: 1fr; } }
 
-        .input-group { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; }
-        label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 10px; color: var(--text-muted); }
-        .val-display { float: right; color: #6366f1; font-weight: 700; }
+        .input-group { 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 20px; 
+            border-radius: 20px; 
+            border: 1px solid #f1f5f9;
+            transition: transform 0.2s;
+        }
+        .input-group:hover { transform: translateY(-2px); }
 
+        label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 15px; color: var(--text-dark); }
+        .val-display { float: right; color: var(--accent-green); font-weight: 700; }
+
+        /* Custom Slider Design */
         input[type="range"] {
-            -webkit-appearance: none; width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; outline: none;
+            -webkit-appearance: none; width: 100%; height: 6px; background: #e2e8f0; border-radius: 10px; outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 20px; height: 20px; background: #6366f1; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            -webkit-appearance: none; width: 22px; height: 22px; background: var(--white); border-radius: 50%; cursor: pointer; border: 3px solid var(--accent-pink); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* Buttons */
-        .btn-container { display: flex; gap: 15px; }
+        .btn-container { display: flex; gap: 15px; margin-top: 20px; }
         .btn {
-            flex: 1; padding: 16px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 0.95rem;
+            flex: 1; padding: 18px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 1rem;
         }
-        .btn-primary { background: #6366f1; color: white; }
-        .btn-primary:hover { background: #4f46e5; transform: translateY(-2px); }
-        .btn-secondary { background: var(--mint); color: #065f46; display: none; }
+        .btn-primary { background: var(--accent-green); color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); }
+        .btn-primary:hover { background: #059669; transform: translateY(-2px); }
+        .btn-secondary { background: var(--pink-soft); color: #9d174d; display: none; }
+        .btn-secondary:hover { background: #f9a8d4; }
 
-        /* Results */
+        /* Results Section */
         #results { 
-            display: none; margin-top: 40px; padding: 25px; border-radius: 20px; background: white; 
-            border-left: 8px solid #6366f1; animation: slideUp 0.6s ease;
+            display: none; margin-top: 40px; padding: 30px; border-radius: 25px; background: white; 
+            border-bottom: 8px solid var(--green-soft); animation: slideIn 0.6s ease;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        .score-pill { display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: 700; margin-bottom: 15px; }
-        .rec-list { margin-top: 15px; padding: 0; list-style: none; }
-        .rec-list li { margin-bottom: 10px; padding-left: 25px; position: relative; font-size: 0.9rem; color: #475569; line-height: 1.5; }
-        .rec-list li::before { content: '✦'; position: absolute; left: 0; color: #6366f1; }
+        .score-pill { display: inline-block; padding: 6px 18px; border-radius: 25px; font-weight: 700; margin-bottom: 15px; font-size: 0.85rem; }
+        .score-number { font-size: 2.5rem; font-weight: 700; margin: 10px 0; display: block; }
+        
+        .rec-list { margin-top: 20px; padding: 0; list-style: none; }
+        .rec-list li { 
+            margin-bottom: 12px; padding: 15px 15px 15px 40px; position: relative; 
+            font-size: 0.95rem; color: #475569; background: #f8fafc; border-radius: 12px;
+        }
+        .rec-list li::before { content: '🌸'; position: absolute; left: 12px; font-size: 1rem; }
 
-        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: var(--text-muted); opacity: 0.7; }
+        footer { text-align: center; margin-top: 50px; font-size: 0.85rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -86,150 +104,34 @@
 <div class="container">
     <div class="header">
         <span class="brand">Wellness Navigator</span>
-        <h1>Balanced Life Assessment</h1>
+        <h1>How are you feeling?</h1>
+        <p class="intro">Share a bit about your current routine for a personalized wellbeing check.</p>
     </div>
 
     <div class="grid">
         <div class="input-group">
-            <label>Academic Load <span class="val-display" id="v1">5</span></label>
+            <label>Academic Workload <span class="val-display" id="v1">Moderate</span></label>
             <input type="range" id="workload" min="1" max="10" value="5">
         </div>
         <div class="input-group">
-            <label>Attendance (%) <span class="val-display" id="v2">85%</span></label>
+            <label>Attendance <span class="val-display" id="v2">85%</span></label>
             <input type="range" id="attendance" min="0" max="100" value="85">
         </div>
         <div class="input-group">
-            <label>Sleep (Hours) <span class="val-display" id="v3">7h</span></label>
+            <label>Sleep per Night <span class="val-display" id="v3">7h</span></label>
             <input type="range" id="sleep" min="0" max="12" value="7">
         </div>
         <div class="input-group">
-            <label>Activity (Hr/Wk) <span class="val-display" id="v4">3h</span></label>
-            <input type="range" id="activity" min="0" max="20" value="3">
+            <label>Exercise (Hr/Wk) <span class="val-display" id="v4">3h</span></label>
+            <input type="range" id="activity" min="0" max="21" value="3">
         </div>
         <div class="input-group">
-            <label>Social Support <span class="val-display" id="v5">Good</span></label>
+            <label>Social Connection <span class="val-display" id="v5">Healthy</span></label>
             <input type="range" id="social" min="1" max="10" value="7">
         </div>
         <div class="input-group">
-            <label>Current Mood <span class="val-display" id="v6">Stable</span></label>
+            <label>General Mood <span class="val-display" id="v6">Stable</span></label>
             <input type="range" id="mood" min="1" max="10" value="6">
         </div>
-    </div>
-
-    <div class="btn-container">
-        <button class="btn btn-primary" onclick="calculate()">Analyze My Wellbeing</button>
-        <button id="downloadBtn" class="btn btn-secondary" onclick="downloadReport()">Download Report (.txt)</button>
-    </div>
-
-    <div id="results">
-        <div id="level-pill" class="score-pill"></div>
-        <div style="font-size: 1.1rem;">Stress Score: <strong id="score-val">0</strong>/100</div>
-        <ul class="rec-list" id="recommendations"></ul>
-    </div>
-
-    <footer>
-        Designed by Binary Beasts &copy; 2025 • Anonymous Student Support
-    </footer>
-</div>
-
-<script>
-    // Slider Interactivity
-    const setupSlider = (id, valId, suffix = "") => {
-        const el = document.getElementById(id);
-        el.oninput = () => {
-            let display = el.value + suffix;
-            if(id === 'social') display = el.value < 4 ? "Low" : (el.value < 7 ? "Good" : "Strong");
-            if(id === 'mood') display = el.value < 4 ? "Low" : (el.value < 7 ? "Stable" : "Positive");
-            document.getElementById(valId).innerText = display;
-        };
-    };
-
-    setupSlider('workload', 'v1');
-    setupSlider('attendance', 'v2', '%');
-    setupSlider('sleep', 'v3', 'h');
-    setupSlider('activity', 'v4', 'h');
-    setupSlider('social', 'v5');
-    setupSlider('mood', 'v6');
-
-    let currentData = {};
-
-    function calculate() {
-        const d = {
-            work: parseInt(document.getElementById('workload').value),
-            att: parseInt(document.getElementById('attendance').value),
-            slp: parseInt(document.getElementById('sleep').value),
-            act: parseInt(document.getElementById('activity').value),
-            soc: parseInt(document.getElementById('social').value),
-            mod: parseInt(document.getElementById('mood').value)
-        };
-
-        // Multi-factor logic
-        let score = (d.work * 6) + (100 - d.att)*0.1 + (12 - d.slp)*4 + (20 - d.act)*0.5 + (10 - d.soc)*3 + (10 - d.mod)*4;
-        score = Math.min(Math.max(Math.round(score), 5), 100);
-        
-        currentData = {...d, score};
-
-        const res = document.getElementById('results');
-        const pill = document.getElementById('level-pill');
-        const recs = document.getElementById('recommendations');
-        const dBtn = document.getElementById('downloadBtn');
-
-        res.style.display = 'block';
-        dBtn.style.display = 'block';
-        document.getElementById('score-val').innerText = score;
-
-        let level, color, bg, list;
-
-        if(score < 40) {
-            level = "Optimal Balance"; color = "#065f46"; bg = "#d1fae5";
-            list = ["Your current routine is highly effective.", "Maintain your physical activity levels.", "Consider mentoring a peer who might be struggling."];
-        } else if(score < 75) {
-            level = "Moderate Pressure"; color = "#92400e"; bg = "#fef3c7";
-            list = ["Try a 10-minute mindfulness exercise today.", "Review your task list and prioritize the top 3 items.", "Ensure you reach your 7-hour sleep goal tonight."];
-        } else {
-            level = "High Stress Alert"; color = "#991b1b"; bg = "#fee2e2";
-            list = ["Immediate break recommended (30+ minutes).", "Speak with a trusted friend or counselor about your load.", "Temporary reduction in extracurricular tasks advised."];
-        }
-
-        pill.innerText = level;
-        pill.style.color = color;
-        pill.style.backgroundColor = bg;
-        recs.innerHTML = list.map(item => `<li>${item}</li>`).join('');
-        res.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function downloadReport() {
-        const date = new Date().toLocaleDateString();
-        const content = `
-WELLNESS NAVIGATOR REPORT
-Generated: ${date}
--------------------------
-RESULTS:
-Stress Score: ${currentData.score}/100
-Status: ${document.getElementById('level-pill').innerText}
-
-INPUT SUMMARY:
-- Academic Workload: ${currentData.work}/10
-- Attendance: ${currentData.att}%
-- Sleep: ${currentData.slp} hours
-- Physical Activity: ${currentData.act} hours/week
-- Social Support: ${currentData.soc}/10
-- Mood Rating: ${currentData.mod}/10
-
-PERSONALIZED RECOMMENDATIONS:
-${Array.from(document.querySelectorAll('#recommendations li')).map(li => "- " + li.innerText).join('\n')}
-
-Note: This report is for wellness guidance only. 
-Provided by Binary Beasts.
-        `;
-        const blob = new Blob([content], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Wellness_Report_${date.replace(/\//g, '-')}.txt`;
-        a.click();
-    }
-</script>
-
-</body>
-</html>
+        <div class="input-group">
+            <label>Extra-curriculars <span
