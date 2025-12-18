@@ -134,4 +134,107 @@
             <input type="range" id="mood" min="1" max="10" value="6">
         </div>
         <div class="input-group">
-            <label>Extra-curriculars <span
+            <label>Extra-curriculars <span class="val-display" id="v7">Balanced</span></label>
+            <input type="range" id="extra" min="0" max="15" value="5">
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn btn-primary" onclick="analyze()">Analyze My Wellbeing</button>
+        <button id="downloadBtn" class="btn btn-secondary" onclick="downloadReport()">Download Report (.txt)</button>
+    </div>
+
+    <div id="results">
+        <div id="level-pill" class="score-pill"></div>
+        <div style="font-size: 1rem; color: var(--text-muted);">Current Stress Score</div>
+        <span class="score-number" id="score-val">0</span>
+        <div style="font-weight: 700; margin-top: 20px;">Personalized Wellness Steps:</div>
+        <ul class="rec-list" id="recommendations"></ul>
+    </div>
+
+    <footer>
+        Empowering Student Wellbeing &bull; Binary Beasts &copy; 2025
+    </footer>
+</div>
+
+<script>
+    // Slider Logic & Reasonable Labels
+    const sliders = [
+        { id: 'workload', vid: 'v1', map: (v) => v < 4 ? "Light" : (v < 8 ? "Moderate" : "Heavy") },
+        { id: 'attendance', vid: 'v2', suffix: "%" },
+        { id: 'sleep', vid: 'v3', suffix: "h" },
+        { id: 'activity', vid: 'v4', suffix: "h" },
+        { id: 'social', vid: 'v5', map: (v) => v < 4 ? "Low" : (v < 8 ? "Healthy" : "Very Strong") },
+        { id: 'mood', vid: 'v6', map: (v) => v < 4 ? "Tired" : (v < 8 ? "Stable" : "Cheerful") },
+        { id: 'extra', vid: 'v7', map: (v) => v < 5 ? "Minimal" : (v < 11 ? "Balanced" : "High") }
+    ];
+
+    sliders.forEach(s => {
+        const el = document.getElementById(s.id);
+        el.oninput = () => {
+            document.getElementById(s.vid).innerText = s.map ? s.map(el.value) : el.value + (s.suffix || "");
+        };
+    });
+
+    let lastScoreData = {};
+
+    function analyze() {
+        const d = {
+            work: parseInt(document.getElementById('workload').value),
+            att: parseInt(document.getElementById('attendance').value),
+            slp: parseInt(document.getElementById('sleep').value),
+            act: parseInt(document.getElementById('activity').value),
+            soc: parseInt(document.getElementById('social').value),
+            mod: parseInt(document.getElementById('mood').value),
+            ext: parseInt(document.getElementById('extra').value)
+        };
+
+        // Reasonable Weighting Calculation
+        let raw = (d.work * 7) + (100 - d.att)*0.15 + (12 - d.slp)*5 + (20 - d.act)*0.4 + (10 - d.soc)*3 + (10 - d.mod)*4 + (d.ext * 2);
+        let score = Math.min(Math.max(Math.round(raw / 1.5), 5), 100);
+        
+        lastScoreData = {...d, score};
+
+        const res = document.getElementById('results');
+        const pill = document.getElementById('level-pill');
+        const dBtn = document.getElementById('downloadBtn');
+        const recs = document.getElementById('recommendations');
+
+        res.style.display = 'block';
+        dBtn.style.display = 'block';
+        document.getElementById('score-val').innerText = score;
+
+        let level, bg, color, list;
+
+        if(score < 40) {
+            level = "Gentle Balance"; bg = "#dcfce7"; color = "#166534";
+            list = ["You're managing your time beautifully. Keep it up!", "Try a new creative outlet during your free time.", "Ensure you're drinking enough water to maintain this energy."];
+        } else if(score < 75) {
+            level = "Action Required"; bg = "#fff7ed"; color = "#9a3412";
+            list = ["Focus on getting 30 minutes more sleep tonight.", "Try the '3-3-3' rule to stay grounded when feeling busy.", "Declutter your study space to help reduce visual stress."];
+        } else {
+            level = "Rest & Reset"; bg = "#fdf2f8"; color = "#9d174d";
+            list = ["Please pause your tasks for at least 1 hour.", "Reach out to a trusted mentor or friend to share your load.", "Focus on gentle movement, like a slow walk or stretching."];
+        }
+
+        pill.innerText = level;
+        pill.style.backgroundColor = bg;
+        pill.style.color = color;
+        recs.innerHTML = list.map(i => `<li>${i}</li>`).join('');
+        res.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function downloadReport() {
+        const date = new Date().toLocaleString();
+        const content = `WELLNESS NAVIGATOR REPORT\nCreated: ${date}\n-------------------------------\nResult: ${document.getElementById('level-pill').innerText}\nStress Score: ${lastScoreData.score}/100\n\nParameters Analyzed:\n- Workload: ${lastScoreData.work}/10\n- Attendance: ${lastScoreData.att}%\n- Sleep: ${lastScoreData.slp} hours\n- Exercise: ${lastScoreData.act} hours/week\n- Social Connection: ${lastScoreData.soc}/10\n- Mood: ${lastScoreData.mod}/10\n- Extracurriculars: ${lastScoreData.ext} hours\n\nPersonalized Guidance:\n${Array.from(document.querySelectorAll('#recommendations li')).map(li => "• " + li.innerText).join('\n')}\n\nDesigned by Binary Beasts. This is a wellness tool, not a medical diagnosis.`;
+        
+        const blob = new Blob([content], { type: "text/plain" });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Wellness_Report_${new Date().getTime()}.txt`;
+        link.click();
+    }
+</script>
+
+</body>
+</html>
